@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Enables static HTML export
+  output: 'export', // enables static export automatically
   images: {
     unoptimized: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  trailingSlash: true, // Optional, avoids routing issues on GH Pages
-}
+  trailingSlash: true, // helps prevent path issues on GitHub Pages
+};
 
-export default nextConfig
+export default nextConfig;
