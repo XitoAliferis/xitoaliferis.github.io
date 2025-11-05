@@ -139,10 +139,7 @@
     @apply bg-background text-foreground;
   }
 
-  /* Custom scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
+
 
   ::-webkit-scrollbar-track {
     background: #0d0d0d;
