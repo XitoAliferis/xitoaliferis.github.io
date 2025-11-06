@@ -233,7 +233,7 @@ export function Projects() {
                                             href={project.links.demo}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors text-xs font-medium"
+                                            className="flex items-center gap-1 px-2 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors text-xs font-medium"
                                         >
                                             <PlayCircle className="w-4 h-4" />
                                             Demo
@@ -245,7 +245,7 @@ export function Projects() {
                                             href={project.links.live}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors text-xs font-medium"
+                                            className="flex items-center gap-1 px-2 py-2 rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors text-xs font-medium"
                                         >
                                             <Globe className="w-4 h-4" />
                                             Live
@@ -257,7 +257,7 @@ export function Projects() {
                                             href={project.links.devpost}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-xs font-medium"
+                                            className="flex items-center gap-1 px-2 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-xs font-medium"
                                         >
                                             <ExternalLink className="w-4 h-4" />
                                             Devpost
