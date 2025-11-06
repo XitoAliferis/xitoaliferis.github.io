@@ -22,6 +22,7 @@ export function Navigation() {
     { label: "Publications", href: "#publications" },
     { label: "Experience", href: "#experience" },
     { label: "Awards", href: "#awards" },
+    { label: "Projects", href: "#projects" },
   ]
 
   return (
