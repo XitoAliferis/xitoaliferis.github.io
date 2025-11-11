@@ -16,7 +16,15 @@ export function Awards() {
       organization: "NSERC & University of Western Ontario",
       year: "2025",
       description:
-        "Competitive national research award supporting undergraduate work in machine learning and predictive maintenance under Dr. Yili Tang at the MoTech Group.",
+      "Competitive national research award supporting undergraduate work in machine learning and predictive maintenance under Dr. Yili Tang at the MoTech Group.",
+      icon: Award,
+    },
+    {
+      title: "UWO In-Course Scholarships Year IV",
+      organization: "University of Western Ontario",
+      year: "2025",
+      description:
+        "Awarded to top students across the university entering fourth year with competitive academic averages, recognizing high academic achievement in third year.",
       icon: Sparkles,
     },
     {
@@ -25,6 +33,14 @@ export function Awards() {
       year: "2023, 2024, 2025",
       description:
         "Recognized for sustained academic excellence ranking among the top students in the Faculty of Engineering.",
+      icon: Star,
+    },
+    {
+      title: "The President's Honor Roll",
+      organization: "University of Miami",
+      year: "2022",
+      description:
+        "Awarded to undergraduate students who have attained the highest possible scholastic achievement for the semester.",
       icon: Star,
     },
   ]
