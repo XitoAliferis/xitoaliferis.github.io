@@ -10,6 +10,22 @@ export function Projects() {
     const projects = [
         {
             id: 1,
+            title: "LoRA Fine-Tuning for Algorithmic Reasoning",
+            description:
+    "Self-directed collaborative manuscript testing whether LoRA fine-tuning can help a 1.5B LLM approach a 72B model on multi-step algorithmic puzzles, using solver-generated data and structural metrics.",
+            tags: ["Python", "PyTorch", "HuggingFace", "LoRA", "LLMs", "Evaluation"],
+            image: "lora_project.png",
+            year: 2025,
+            originalPhotoSize: false,
+            type: "Project",
+            links: {
+                demo: "https://youtu.be/mTReVHCEI8I",
+                manuscript: "LORA_manuscript.pdf",
+                github: "https://github.com/XitoAliferis/CS_3346-Group_Project",
+            },
+        },
+        {
+            id: 2,
             title: "Roominate",
             description:
                 "A gamified productivity platform built in Godot that transforms task completion into world-building. Integrates AI assistants to break down complex tasks and motivate users through spatial memory and gamification.",
@@ -28,7 +44,7 @@ export function Projects() {
             },
         },
         {
-            id: 2,
+            id: 3,
             title: "LinkU",
             description:
                 "A social networking platform where personalized AI agents act as digital twins, initiating conversations and surfacing meaningful connections between compatible users.",
@@ -46,7 +62,7 @@ export function Projects() {
             },
         },
         {
-            id: 3,
+            id: 4,
             title: "WeVoteLive",
             description:
                 "A real-time polling platform with a custom multithreaded C++ WebSocket server enabling live, synchronized audience participation through a seamless front-end built in SvelteKit.",
@@ -61,7 +77,7 @@ export function Projects() {
             },
         },
         {
-            id: 4,
+            id: 5,
             title: "TradeWise",
             description:
                 "A stock analysis and prediction system combining sentiment analysis with deep learning models to forecast market trends, achieving over 70% prediction accuracy.",
@@ -72,7 +88,7 @@ export function Projects() {
             links: { github: "https://github.com/XitoAliferis/TradeWise" },
         },
         {
-            id: 5,
+            id: 6,
             title: "ToDo",
             description:
                 "A full-stack reminders and productivity web app supporting offline mode and cross-device synchronization via Firebase and PostgreSQL.",
@@ -83,7 +99,7 @@ export function Projects() {
             links: { github: "https://github.com/XitoAliferis/ToDo", live: "https://to-do-ashen-xi.vercel.app/" },
         },
         {
-            id: 6,
+            id: 7,
             title: "Inhaler Solution",
             description:
                 "An assistive add-on device for inhalers designed for visually impaired users, integrating LED and audio feedback with a built-in puff counter and reset function.",
@@ -94,7 +110,7 @@ export function Projects() {
             links: { github: "https://github.com/XitoAliferis/InahlerSolution", demo: "https://drive.google.com/file/d/1QZGND_idemANXYgP3tZE0WLQwf9iRZbP/view?usp=sharing", documentation: "https://drive.google.com/file/d/1_QP0OgfT0sJAOsP4bLkQQ1aB4gBOLZbR/view?usp=sharing" },
         },
         {
-            id: 7,
+            id: 8,
             title: "Test Subject 26",
             description:
                 "A 3D roguelite game built in Unity, featuring procedural generation, turn-based combat, and a narrative-driven exploration of identity and autonomy.",
@@ -272,6 +288,17 @@ export function Projects() {
                                         >
                                             <FileText className="w-4 h-4" />
                                             Docs
+                                        </a>
+                                    )}
+                                    {project.links.manuscript && (
+                                        <a
+                                            href={project.links.manuscript}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-colors text-xs font-medium"
+                                        >
+                                            <FileText className="w-4 h-4" />
+                                            Manuscript
                                         </a>
                                     )}
                                 </div>

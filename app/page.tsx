@@ -6,6 +6,7 @@ import { Experience } from "@/components/experience"
 import { Awards } from "@/components/awards"
 import { Navigation } from "@/components/navigation"
 import { Projects } from "@/components/projects"
+import { Education } from "@/components/education"
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Navigation />
       <Hero />
       <About />
+      <Education />
       <Research />
       <Publications />
       <Experience />

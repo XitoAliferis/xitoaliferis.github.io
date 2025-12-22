@@ -18,6 +18,7 @@ export function Navigation() {
 
   const navItems = [
     { label: "About", href: "#about" },
+    { label: "Education", href: "#education" }, // Added Education to navigation
     { label: "Research", href: "#research" },
     { label: "Publications", href: "#publications" },
     { label: "Experience", href: "#experience" },
@@ -27,16 +28,14 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? "bg-background/80 backdrop-blur-lg border-b border-border"
-          : "md:bg-transparent bg-background/70 backdrop-blur-md"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-background/80 backdrop-blur-lg border-b border-border" : "bg-transparent"
+      }`}
     >
-
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <a href="#" className="text-xl font-bold">
-            <span className="text-primary">𝑥𝑎</span>
+            <span className="text-primary">λ</span> YourName
           </a>
 
           {/* Desktop Navigation */}
