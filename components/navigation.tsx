@@ -35,7 +35,7 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <a href="#" className="text-xl font-bold">
-            <span className="text-primary">λ</span> YourName
+            <span className="text-primary">𝑥𝑎</span>
           </a>
 
           {/* Desktop Navigation */}
