@@ -42,9 +42,9 @@ export function Awards() {
     {
       title: "Dean's List",
       organization: "University of Western Ontario",
-      year: "2023, 2024, 2025",
+      year: "2023, 2024, 2025, 2026",
       description:
-        "Recognized for sustained academic excellence ranking among the top students in the Faculty of Engineering.",
+        "Recognized for sustained academic excellence ranking among the top students in the Faculty of Engineering across all four years.",
       icon: Star,
     },
     {

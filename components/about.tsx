@@ -44,7 +44,7 @@ export function About() {
             <FadeIn delay={0.15}>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { value: 88.45, decimals: 2, suffix: "%", label: "Average" },
+                  { value: 90.11, decimals: 2, suffix: "%", label: "Average" },
                   { value: 1, decimals: 0, suffix: "", label: "Preprint" },
                   { value: 5, decimals: 0, suffix: "", label: "Awards" },
                 ].map((stat) => (
