@@ -8,7 +8,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Xristopher Aliferis",
-  description: "Understanding the mathematical foundations of machine learning",
+  description: "Xristopher Aliferis — Incoming MMath at the University of Waterloo. ML researcher focused on explainable AI, optimization theory, and neuromorphic computing.",
   generator: 'v0.app',
   icons: {
     icon: '/favicon.ico',

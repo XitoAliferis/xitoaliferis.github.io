@@ -7,6 +7,8 @@ import { Awards } from "@/components/awards"
 import { Navigation } from "@/components/navigation"
 import { Projects } from "@/components/projects"
 import { Education } from "@/components/education"
+import { Footer } from "@/components/footer"
+import { BackToTop } from "@/components/back-to-top"
 
 export default function Home() {
   return (
@@ -20,6 +22,8 @@ export default function Home() {
       <Experience />
       <Awards />
       <Projects />
+      <Footer />
+      <BackToTop />
     </main>
   )
 }

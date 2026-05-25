@@ -1,4 +1,8 @@
+"use client"
+
 import { Award, Trophy, Star, Sparkles } from "lucide-react"
+import { FadeIn, StaggerChildren, staggerItem } from "@/components/motion"
+import { motion } from "framer-motion"
 
 export function Awards() {
   const awards = [
@@ -14,9 +18,17 @@ export function Awards() {
     {
       title: "NSERC Undergraduate Student Research Award (USRA)",
       organization: "NSERC & University of Western Ontario",
+      year: "2026",
+      description:
+        "Competitive national research award supporting undergraduate work in neuromorphic computing and 3D head reconstruction under Dr. Roy Eagleson.",
+      icon: Award,
+    },
+    {
+      title: "NSERC Undergraduate Student Research Award (USRA)",
+      organization: "NSERC & University of Western Ontario",
       year: "2025",
       description:
-      "Competitive national research award supporting undergraduate work in machine learning and predictive maintenance under Dr. Yili Tang at the MoTech Group.",
+        "Competitive national research award supporting undergraduate work in machine learning and predictive maintenance under Dr. Yili Tang at the MoTech Group.",
       icon: Award,
     },
     {
@@ -46,70 +58,69 @@ export function Awards() {
   ]
 
   return (
-    <section id="awards" className="py-32 px-6 bg-muted/20">
+    <section id="awards" className="py-32 px-6 relative section-alt">
+      <div className="section-divider absolute top-0 left-0 right-0" />
+
       <div className="max-w-6xl mx-auto">
-        <div className="mb-16">
-          <div className="inline-block px-4 py-1.5 mb-4 rounded-full border border-primary/30 bg-primary/5">
-            <span className="text-sm text-primary font-mono">Recognition</span>
+        <FadeIn>
+          <div className="mb-16">
+            <div className="inline-block px-4 py-1.5 mb-4 rounded-full border border-wine-700/30 bg-wine-800/10">
+              <span className="text-sm text-wine-500 font-mono">Recognition</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6">
+              Awards & <span className="text-gradient">Honors</span>
+            </h2>
           </div>
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            Awards & <span className="text-primary">Honors</span>
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
+        </FadeIn>
+
+        <StaggerChildren staggerDelay={0.08} className="grid md:grid-cols-2 gap-5">
           {awards.map((award, idx) => {
             const Icon = award.icon
             return (
-              <div
+              <motion.div
                 key={idx}
-                className={`group relative p-6 rounded-2xl border transition-all duration-300 ${award.featured
-                    ? "md:col-span-2 bg-primary/5 border-primary/50 hover:border-primary"
-                    : "bg-background border-border hover:border-primary/50"
-                  }`}
+                variants={staggerItem}
+                className={`group relative p-6 rounded-2xl border transition-all duration-300 ${
+                  award.featured
+                    ? "md:col-span-2 bg-wine-800/8 border-wine-700/30 hover:border-wine-600/50 glow-wine"
+                    : "bg-muted/20 border-border hover:border-wine-700/30"
+                }`}
               >
                 <div className="flex items-start gap-4">
-                  {/* Icon */}
                   <div
-                    className={`p-3 rounded-xl shrink-0 group-hover:scale-110 transition-transform ${award.featured ? "bg-primary/20 text-primary" : "bg-primary/10 text-primary"
-                      }`}
+                    className={`p-3 rounded-xl shrink-0 group-hover:scale-110 transition-all ${
+                      award.featured
+                        ? "bg-wine-800/15 text-wine-500"
+                        : "bg-wine-800/10 text-wine-600/70 group-hover:text-wine-500"
+                    }`}
                   >
-                    <Icon className="w-6 h-6" />
+                    <Icon className="w-5 h-5" />
                   </div>
 
-                  {/* Content */}
                   <div className="flex-1 min-w-0">
-                    {/* Header with title, badge, and year */}
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex flex-col">
-                        <h3
-                          className={`font-bold text-balance leading-tight ${award.featured ? "text-xl" : "text-lg"
-                            }`}
-                        >
+                      <div>
+                        <h3 className={`font-bold text-balance leading-tight ${award.featured ? "text-lg" : "text-base"}`}>
                           {award.title}
                         </h3>
-                        <p className="text-sm text-primary font-medium">{award.organization}</p>
+                        <p className="text-sm text-wine-500/70 font-medium">{award.organization}</p>
                       </div>
-
                       <div className="flex items-center gap-2 shrink-0">
                         {award.featured && (
-                          <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/30">
+                          <span className="px-2.5 py-0.5 rounded-full bg-wine-800/10 text-wine-500 text-xs font-medium border border-wine-700/20">
                             Featured
                           </span>
                         )}
-                        <span className="text-sm font-mono text-muted-foreground">{award.year}</span>
+                        <span className="text-xs font-mono text-muted-foreground">{award.year}</span>
                       </div>
                     </div>
-
-                    {/* Description */}
-                    <p className="text-muted-foreground text-pretty leading-relaxed">
-                      {award.description}
-                    </p>
+                    <p className="text-muted-foreground text-sm text-pretty leading-relaxed">{award.description}</p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </StaggerChildren>
       </div>
     </section>
   )

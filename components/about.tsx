@@ -1,104 +1,75 @@
 "use client"
 
-import { useState } from "react"
+import { FadeIn, AnimatedCounter } from "@/components/motion"
+
+const skills = [
+  "Python", "C", "C++", "C#", "VHDL", "TypeScript", "PyTorch",
+  "TensorFlow", "React", "Next.js", "Node.js", "FPGA", "MATLAB",
+]
 
 export function About() {
-  const [activeTab, setActiveTab] = useState<"bio" | "philosophy">("bio")
-
   return (
-    <section id="about" className="py-32 px-6 relative overflow-hidden">
-      {/* Decorative element */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+    <section id="about" className="py-32 px-6 relative overflow-hidden section-alt">
+      <div className="absolute top-20 right-0 w-96 h-96 bg-wine-800/5 rounded-full blur-[120px]" />
 
       <div className="max-w-6xl mx-auto relative">
-        <div className="grid md:grid-cols-5 gap-12 items-start">
-          {/* Left side - Decorative quote */}
-          <div className="md:col-span-2 space-y-6">
-            <div className="text-8xl text-primary/20 font-serif leading-none">"</div>
+        <div className="grid md:grid-cols-5 gap-16 items-start">
+          <FadeIn direction="left" className="md:col-span-2 space-y-6">
+            <div className="text-8xl text-wine-600/20 font-serif leading-none select-none">&ldquo;</div>
             <blockquote className="text-2xl font-light text-muted-foreground italic leading-relaxed text-balance">
-              Understanding why neural networks work is as important as making them work better.
+              If we can&apos;t explain why a model works, we can&apos;t trust it when it matters most.
             </blockquote>
-            <div className="h-1 w-20 bg-primary" />
-          </div>
+            <div className="h-1 w-20 bg-gradient-to-r from-wine-600 to-wine-800 rounded-full" />
+          </FadeIn>
 
-          {/* Right side - Content */}
-          <div className="md:col-span-3">
-            <div className="flex gap-4 mb-8 border-b border-border">
-              <button
-                onClick={() => setActiveTab("bio")}
-                className={`pb-3 px-1 font-medium transition-colors relative ${activeTab === "bio" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                  }`}
-              >
-                Background
-                {activeTab === "bio" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
-              </button>
-              <button
-                onClick={() => setActiveTab("philosophy")}
-                className={`pb-3 px-1 font-medium transition-colors relative ${activeTab === "philosophy" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                  }`}
-              >
-                Research Philosophy
-                {activeTab === "philosophy" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
-              </button>
-            </div>
-
-            {activeTab === "bio" && (
+          <div className="md:col-span-3 space-y-8">
+            <FadeIn>
               <div className="space-y-6 text-lg leading-relaxed">
-                <p className="text-pretty text-muted-foreground">
-                  I am an undergraduate student at <span className="text-primary font-medium">University of Western Ontario</span>,
-                  pursuing a degree in <span className="text-primary font-medium">Software Engineering</span>. My research
-                  focuses on understanding why machine learning systems work the way they do, bridging theoretical
-                  foundations with empirical observations.
+                <p className="text-muted-foreground text-pretty">
+                  I recently graduated from the{" "}
+                  <span className="text-wine-500 font-medium">University of Western Ontario</span> with a
+                  B.E.Sc. in <span className="text-wine-500 font-medium">Software Engineering</span>. This fall,
+                  I&apos;m joining the{" "}
+                  <span className="text-foreground font-medium">University of Waterloo</span> for my MMath in
+                  Computer Science, supervised by Dr. Robin Cohen and Dr. Lukasz Golab.
                 </p>
-                <p className="text-pretty text-muted-foreground">
-                  Currently, I am working with <span className="text-foreground font-medium">Dr. Yili Tang</span> at
-                  the <span className="text-foreground font-medium">MoTech Group</span>, where I
-                  investigate predictive maintenance for railway wheelsets using machine learning models on detector and mileage data.
+                <p className="text-muted-foreground text-pretty">
+                  My work spans from low-level hardware &mdash; designing spiking neural networks on FPGAs and
+                  building on-device 3D reconstruction pipelines &mdash; to high-level ML theory, studying why
+                  models generalize and how to make their decisions interpretable.
                 </p>
-                <div className="grid grid-cols-3 gap-4 pt-4">
-                  <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                    <div className="text-3xl font-bold text-primary mb-1">3.95</div>
-                    <div className="text-sm text-muted-foreground">GPA</div>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.15}>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { value: 88.45, decimals: 2, suffix: "%", label: "Average" },
+                  { value: 1, decimals: 0, suffix: "", label: "Preprint" },
+                  { value: 5, decimals: 0, suffix: "", label: "Awards" },
+                ].map((stat) => (
+                  <div key={stat.label} className="p-5 rounded-xl bg-muted/30 border border-border hover:border-wine-700/30 transition-colors group">
+                    <div className="text-3xl font-bold text-wine-500 mb-1">
+                      <AnimatedCounter target={stat.value} decimals={stat.decimals} suffix={stat.suffix} />
+                    </div>
+                    <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{stat.label}</div>
                   </div>
-                  <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                    <div className="text-3xl font-bold text-primary mb-1">1</div>
-                    <div className="text-sm text-muted-foreground">Preprint</div>
-                  </div>
-                  <div className="p-4 rounded-lg bg-muted/50 border border-border">
-                    <div className="text-3xl font-bold text-primary mb-1">3</div>
-                    <div className="text-sm text-muted-foreground">Awards</div>
-                  </div>
+                ))}
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.25}>
+              <div>
+                <h3 className="text-sm font-mono text-muted-foreground mb-3 uppercase tracking-wider">Technologies</h3>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((skill) => (
+                    <span key={skill} className="px-3 py-1.5 text-sm rounded-full bg-wine-800/8 text-wine-500/80 border border-wine-700/12 hover:border-wine-600/30 hover:bg-wine-800/15 transition-all cursor-default">
+                      {skill}
+                    </span>
+                  ))}
                 </div>
               </div>
-            )}
-
-            {activeTab === "philosophy" && (
-              <div className="space-y-6 text-lg leading-relaxed">
-                <p className="text-pretty">
-                  I believe that developing{" "}
-                  <span className="text-primary font-medium">rigorous mathematical frameworks</span> is essential for
-                  building more reliable and interpretable AI systems. My approach combines theoretical analysis with
-                  empirical validation.
-                </p>
-
-                <p className="text-pretty text-muted-foreground">
-                  I am particularly interested in the intersection of optimization theory, statistical learning, and
-                  deep learning. My work explores questions around generalization bounds, loss landscape geometry, and
-                  the implicit biases that emerge during training.
-                </p>
-
-                <div className="space-y-3 pt-4">
-                  {["Theory-driven experimentation", "Reproducible research", "Open collaboration"].map(
-                    (principle, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        <span className="text-muted-foreground">{principle}</span>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </div>
-            )}
+            </FadeIn>
           </div>
         </div>
       </div>
