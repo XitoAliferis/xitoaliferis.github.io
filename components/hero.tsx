@@ -1,198 +1,272 @@
 "use client"
 
-import { Github, Linkedin, Mail, FileText, ArrowDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { useEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion"
 
 const roles = [
   "Incoming MMath @ Waterloo",
-  "ML & Explainable AI Researcher",
-  "FPGA & Neuromorphic Computing",
+  "Explainable AI Researcher",
+  "Neuromorphic + FPGA Builder",
   "Software Engineer",
 ]
 
-function TypedText() {
-  const [roleIndex, setRoleIndex] = useState(0)
-  const [charIndex, setCharIndex] = useState(0)
-  const [isDeleting, setIsDeleting] = useState(false)
+function TypedRole() {
+  const reduceMotion = useReducedMotion()
+  const [role, setRole] = useState(0)
+  const [characters, setCharacters] = useState(0)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
-    const current = roles[roleIndex]
-    let timeout: ReturnType<typeof setTimeout>
+    if (reduceMotion) return
+    const text = roles[role]
+    const delay = deleting ? 34 : characters === text.length ? 1700 : 62
+    const timeout = window.setTimeout(() => {
+      if (!deleting && characters < text.length) {
+        setCharacters((value) => value + 1)
+      } else if (!deleting) {
+        setDeleting(true)
+      } else if (characters > 0) {
+        setCharacters((value) => value - 1)
+      } else {
+        setDeleting(false)
+        setRole((value) => (value + 1) % roles.length)
+      }
+    }, delay)
+    return () => window.clearTimeout(timeout)
+  }, [characters, deleting, reduceMotion, role])
 
-    if (!isDeleting && charIndex < current.length) {
-      timeout = setTimeout(() => setCharIndex(charIndex + 1), 60)
-    } else if (!isDeleting && charIndex === current.length) {
-      timeout = setTimeout(() => setIsDeleting(true), 2000)
-    } else if (isDeleting && charIndex > 0) {
-      timeout = setTimeout(() => setCharIndex(charIndex - 1), 30)
-    } else if (isDeleting && charIndex === 0) {
-      setIsDeleting(false)
-      setRoleIndex((roleIndex + 1) % roles.length)
-    }
-
-    return () => clearTimeout(timeout)
-  }, [charIndex, isDeleting, roleIndex])
+  const visible = reduceMotion ? roles[0] : roles[role].slice(0, characters)
 
   return (
-    <span className="font-mono text-wine-500">
-      {roles[roleIndex].slice(0, charIndex)}
-      <span className="animate-pulse">|</span>
+    <span className="font-mono text-[clamp(0.95rem,1.5vw,1.08rem)] tracking-[0.02em] text-signal-bright">
+      {visible}
+      <span className="ml-1 inline-block h-[1.15em] w-[2px] translate-y-[0.18em] animate-pulse bg-signal-bright" aria-hidden="true" />
     </span>
   )
 }
 
 export function Hero() {
+  const reduceMotion = useReducedMotion()
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const glowX = useMotionValue(0)
+  const glowY = useMotionValue(0)
+  const lineX = useSpring(glowX, { stiffness: 120, damping: 24, mass: 0.7 })
+  const lineY = useSpring(glowY, { stiffness: 120, damping: 24, mass: 0.7 })
+  const washX = useSpring(glowX, { stiffness: 90, damping: 26, mass: 1 })
+  const washY = useSpring(glowY, { stiffness: 90, damping: 26, mass: 1 })
 
   useEffect(() => {
+    if (reduceMotion) return
+
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const context = canvas.getContext("2d")
+    if (!context) return
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    let animationFrame = 0
+    let pointer = { x: -9999, y: -9999, active: false }
 
-    const nodes: { x: number; y: number; vx: number; vy: number; active: boolean; pulsePhase: number }[] = []
-    for (let i = 0; i < 60; i++) {
-      nodes.push({
-        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
-        active: false, pulsePhase: Math.random() * Math.PI * 2,
-      })
-    }
+    const nodes = Array.from({ length: 58 }, (_, index) => ({
+      x: 0,
+      y: 0,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      pulse: Math.random() * Math.PI * 2,
+      cluster: index % 3,
+    }))
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      const x = e.clientX - rect.left, y = e.clientY - rect.top
-      nodes.forEach((n) => {
-        const d = Math.sqrt((n.x - x) ** 2 + (n.y - y) ** 2)
-        n.active = d < 150
-        if (n.active) n.pulsePhase = 0
-      })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
+    const resize = () => {
+      const section = canvas.parentElement
+      if (!section) return
+      const bounds = section.getBoundingClientRect()
+      canvas.width = bounds.width
+      canvas.height = bounds.height
 
-    function animate() {
-      if (!ctx || !canvas) return
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      nodes.forEach((node, i) => {
-        node.x += node.vx; node.y += node.vy; node.pulsePhase += 0.05
-        if (node.x < 0 || node.x > canvas.width) node.vx *= -1
-        if (node.y < 0 || node.y > canvas.height) node.vy *= -1
-        nodes.forEach((other, j) => {
-          if (i === j) return
-          const d = Math.sqrt((node.x - other.x) ** 2 + (node.y - other.y) ** 2)
-          if (d < 150) {
-            const o = (node.active || other.active ? 0.35 : 0.08) * (1 - d / 150)
-            ctx.beginPath()
-            ctx.strokeStyle = `rgba(185, 28, 28, ${o})`
-            ctx.lineWidth = node.active || other.active ? 1.5 : 0.5
-            ctx.moveTo(node.x, node.y); ctx.lineTo(other.x, other.y); ctx.stroke()
-          }
-        })
-        const r = Math.max(1, 2 + Math.sin(node.pulsePhase) * (node.active ? 3 : 0.5))
-        ctx.beginPath(); ctx.arc(node.x, node.y, r, 0, Math.PI * 2)
-        ctx.fillStyle = node.active
-          ? `rgba(220, 38, 38, ${0.8 + Math.sin(node.pulsePhase) * 0.2})`
-          : "rgba(185, 28, 28, 0.4)"
-        ctx.fill()
-        if (node.active) {
-          ctx.beginPath(); ctx.arc(node.x, node.y, r + 8, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(220, 38, 38, ${0.15 - Math.sin(node.pulsePhase) * 0.05})`
-          ctx.lineWidth = 2; ctx.stroke()
+      nodes.forEach((node, index) => {
+        if (node.x === 0 && node.y === 0) {
+          const clusterX = node.cluster === 0 ? 0.64 : node.cluster === 1 ? 0.74 : 0.84
+          const clusterY = node.cluster === 0 ? 0.28 : node.cluster === 1 ? 0.5 : 0.72
+          node.x = canvas.width * clusterX + (Math.random() - 0.5) * 150
+          node.y = canvas.height * clusterY + (Math.random() - 0.5) * 130
+        } else {
+          node.x = Math.min(canvas.width - 20, Math.max(20, node.x))
+          node.y = Math.min(canvas.height - 20, Math.max(20, node.y))
         }
       })
-      requestAnimationFrame(animate)
     }
-    animate()
 
-    const handleResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
-    window.addEventListener("resize", handleResize)
-    return () => { window.removeEventListener("resize", handleResize); window.removeEventListener("mousemove", handleMouseMove) }
-  }, [])
+    const handlePointerMove = (event: PointerEvent) => {
+      const bounds = canvas.getBoundingClientRect()
+      pointer = {
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+        active: true,
+      }
+    }
+
+    const handlePointerLeave = () => {
+      pointer = { x: -9999, y: -9999, active: false }
+    }
+
+    const draw = () => {
+      context.clearRect(0, 0, canvas.width, canvas.height)
+
+      nodes.forEach((node) => {
+        node.x += node.vx
+        node.y += node.vy
+        node.pulse += 0.045
+
+        if (node.x < canvas.width * 0.46 || node.x > canvas.width - 12) node.vx *= -1
+        if (node.y < 12 || node.y > canvas.height - 12) node.vy *= -1
+      })
+
+      context.beginPath()
+      context.strokeStyle = "rgba(255, 77, 77, 0.06)"
+      context.lineWidth = 1
+      context.arc(canvas.width * 0.78, canvas.height * 0.5, Math.min(canvas.width, canvas.height) * 0.18, 0, Math.PI * 2)
+      context.stroke()
+
+      context.beginPath()
+      context.strokeStyle = "rgba(255, 77, 77, 0.035)"
+      context.lineWidth = 1
+      context.arc(canvas.width * 0.78, canvas.height * 0.5, Math.min(canvas.width, canvas.height) * 0.27, 0, Math.PI * 2)
+      context.stroke()
+
+      for (let i = 0; i < nodes.length; i += 1) {
+        for (let j = i + 1; j < nodes.length; j += 1) {
+          const a = nodes[i]
+          const b = nodes[j]
+          const dx = a.x - b.x
+          const dy = a.y - b.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+
+          if (distance < 158) {
+            const pointerDistance = pointer.active
+              ? Math.min(
+                  Math.hypot(a.x - pointer.x, a.y - pointer.y),
+                  Math.hypot(b.x - pointer.x, b.y - pointer.y),
+                )
+              : 9999
+            const activeBoost = pointerDistance < 152 ? 2.1 : 1
+            const alpha = (0.045 + (1 - distance / 158) * 0.11) * activeBoost
+
+            context.beginPath()
+            context.strokeStyle = `rgba(255, 77, 77, ${Math.min(alpha, 0.28)})`
+            context.lineWidth = pointerDistance < 152 ? 1.25 : 0.7
+            context.moveTo(a.x, a.y)
+            context.lineTo(b.x, b.y)
+            context.stroke()
+          }
+        }
+      }
+
+      nodes.forEach((node) => {
+        const distanceToPointer = pointer.active ? Math.hypot(node.x - pointer.x, node.y - pointer.y) : 9999
+        const isActive = distanceToPointer < 152
+        const radius = isActive ? 2 + Math.sin(node.pulse) * 0.95 : 1.35 + Math.sin(node.pulse) * 0.42
+
+        context.beginPath()
+        context.arc(node.x, node.y, radius, 0, Math.PI * 2)
+        context.fillStyle = isActive ? "rgba(255, 77, 77, 0.85)" : "rgba(255, 77, 77, 0.32)"
+        context.fill()
+
+        if (isActive) {
+          context.beginPath()
+          context.arc(node.x, node.y, radius + 8.5, 0, Math.PI * 2)
+          context.strokeStyle = `rgba(255, 77, 77, ${0.11 + Math.sin(node.pulse) * 0.03})`
+          context.lineWidth = 1.4
+          context.stroke()
+        }
+      })
+
+      animationFrame = window.requestAnimationFrame(draw)
+    }
+
+    resize()
+    draw()
+
+    window.addEventListener("resize", resize)
+    window.addEventListener("pointermove", handlePointerMove)
+    window.addEventListener("pointerleave", handlePointerLeave)
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+      window.removeEventListener("resize", resize)
+      window.removeEventListener("pointermove", handlePointerMove)
+      window.removeEventListener("pointerleave", handlePointerLeave)
+    }
+  }, [reduceMotion])
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    if (reduceMotion) return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = (event.clientX - bounds.left - bounds.width / 2) / bounds.width
+    const y = (event.clientY - bounds.top - bounds.height / 2) / bounds.height
+    glowX.set(x * 28)
+    glowY.set(y * 18)
+  }
+
+  const handlePointerLeave = () => {
+    glowX.set(0)
+    glowY.set(0)
+  }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden">
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-100 -z-10" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-wine-800/8 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-wine-700/5 rounded-full blur-[100px] -z-10" />
-
-      <div className="relative max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-wine-700/30 bg-wine-800/10">
-                <div className="w-2 h-2 rounded-full bg-wine-600 animate-pulse" />
-                <span className="text-sm text-wine-500 font-mono">Open to Research Opportunities</span>
-              </div>
-            </motion.div>
-
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="text-6xl md:text-7xl font-bold">
-              Xristopher<br /><span className="text-gradient">Aliferis</span>
-            </motion.h1>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="text-xl h-8">
-              <TypedText />
-            </motion.div>
-
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="text-lg text-muted-foreground text-pretty leading-relaxed">
-              I build things that push the boundary between software and hardware &mdash; from neuromorphic chips to ML theory. Incoming MMath student at the{" "}
-              <span className="text-foreground font-medium">University of Waterloo</span>.
-            </motion.p>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} className="flex flex-wrap gap-3">
-              <a href="mailto:xaliferi@uwo.ca">
-                <Button size="lg" className="gap-2 bg-wine-700 hover:bg-wine-600 text-white font-semibold cursor-pointer transition-all hover:shadow-lg hover:shadow-wine-800/30">
-                  <Mail className="w-4 h-4" />Get in Touch
-                </Button>
-              </a>
-              <a href="/Xristopher_Aliferis_Resume_2025.pdf" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline" className="gap-2 bg-transparent border-border hover:border-wine-600/50 hover:text-wine-500 cursor-pointer transition-all">
-                  <FileText className="w-4 h-4" />Download CV
-                </Button>
-              </a>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }} className="flex items-center gap-4 pt-2">
-              {[
-                { href: "https://github.com/xitoaliferis", icon: Github, label: "GitHub" },
-                { href: "https://linkedin.com/in/xristopher-aliferis", icon: Linkedin, label: "LinkedIn" },
-              ].map(({ href, icon: Icon, label }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-wine-500 hover:border-wine-600/50 hover:bg-wine-800/10 transition-all">
-                  <Icon className="w-5 h-5" />
-                </a>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Gradient Orb */}
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.3 }} className="relative hidden md:block">
-            <div className="relative w-full aspect-square max-w-md mx-auto">
-              <div className="absolute inset-12 rounded-full animate-orb-float">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-wine-700/25 via-wine-800/12 to-wine-900/8 backdrop-blur-sm border border-wine-700/15" />
-                <div className="absolute inset-4 rounded-full bg-gradient-to-tl from-wine-600/15 via-transparent to-wine-700/10 animate-pulse-glow" />
-                <div className="absolute inset-8 rounded-full bg-gradient-to-br from-wine-500/8 via-transparent to-transparent" />
-              </div>
-              <div className="absolute inset-0 rounded-full border border-wine-700/12 animate-spin-slow" />
-              <div className="absolute inset-6 rounded-full border border-wine-800/8" style={{ animation: "spin-slow 15s linear infinite reverse" }} />
-              <div className="absolute top-4 left-8 text-2xl text-wine-500/35 animate-float font-mono">&#x2207;</div>
-              <div className="absolute top-16 right-6 text-xl text-wine-600/25 animate-float font-mono" style={{ animationDelay: "1s" }}>&theta;</div>
-              <div className="absolute bottom-16 left-12 text-xl text-wine-600/25 animate-float font-mono" style={{ animationDelay: "2s" }}>&sigma;</div>
-              <div className="absolute bottom-8 right-16 text-2xl text-wine-500/35 animate-float font-mono" style={{ animationDelay: "1.5s" }}>&lambda;</div>
-            </div>
+    <section
+      className="hero-frame relative flex min-h-[100svh] flex-col overflow-hidden pt-[4.5rem]"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
+      {!reduceMotion && <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 hidden opacity-80 lg:block" aria-hidden="true" />}
+      <motion.div
+        className="pointer-events-none absolute right-[-14rem] top-[17%] h-[33rem] w-[46rem] bg-[radial-gradient(circle,rgba(224,49,49,.12),transparent_68%)]"
+        style={reduceMotion ? undefined : { x: washX, y: washY }}
+        aria-hidden="true"
+      />
+      <motion.div
+        className="pointer-events-none absolute right-[5%] top-[16%] hidden h-[32rem] w-[32rem] rounded-full border border-rule/70 bg-[radial-gradient(circle_at_center,rgba(255,77,77,0.07),rgba(255,77,77,0.02)_32%,transparent_70%)] lg:block"
+        style={reduceMotion ? undefined : { x: lineX, y: lineY }}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-[3.25rem] rounded-full border border-rule/45" />
+        <div className="absolute inset-[7rem] rounded-full border border-signal/15" />
+        <div className="absolute left-[14%] top-[22%] h-px w-[18%] bg-signal/30" />
+        <div className="absolute right-[16%] top-[54%] h-px w-[20%] bg-signal/25" />
+        <div className="absolute bottom-[20%] left-[24%] h-px w-[16%] bg-signal/20" />
+      </motion.div>
+      <div className="hero-body fieldbook-shell flex flex-1 items-center pb-12 pt-16">
+        <div className="hero-copy max-w-[43rem]">
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.42 }} className="hero-label mono-label mb-8 flex items-center gap-4 text-signal-bright">
+            <span className="h-px w-9 bg-signal" /> Research / engineering portfolio
+          </motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, delay: 0.05 }} className="hero-title text-[clamp(3.65rem,7.2vw,6.2rem)] font-bold leading-[0.92] tracking-[-0.095em] text-paper">
+            Xristopher<br /><span className="text-signal-bright">Aliferis</span>
+          </motion.h1>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.46, delay: 0.16 }} className="hero-role mt-9 h-7">
+            <TypedRole />
+          </motion.div>
+          <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.46, delay: 0.24 }} className="hero-summary mt-7 max-w-[34rem] text-base leading-8 text-paper-dim sm:text-lg">
+            I develop machine-learning systems that are interpretable, theoretically grounded, and efficient enough for real hardware.
+          </motion.p>
+          <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.46, delay: 0.31 }} className="hero-actions mt-10 flex flex-wrap gap-x-9 gap-y-6">
+            <a className="editorial-link" href="mailto:xaliferi@uwo.ca">Contact me <span aria-hidden="true">-&gt;</span></a>
+            <a className="editorial-link" href="/Xristopher_Aliferis_Resume.pdf" target="_blank" rel="noopener noreferrer">View CV <span aria-hidden="true">-&gt;</span></a>
           </motion.div>
         </div>
       </div>
-
-      <motion.a href="#about" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-wine-500 transition-colors">
-        <span className="text-xs font-mono tracking-widest uppercase">Scroll</span>
-        <ArrowDown className="w-4 h-4 animate-bounce" />
-      </motion.a>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.45, delay: 0.45 }} className="hero-evidence fieldbook-shell grid border-y border-rule sm:grid-cols-3">
+        {[
+          ["Now", "Incoming MMath", "Waterloo / Sept 2026"],
+          ["Focus", "Explainable AI", "Theory + hardware"],
+          ["Output", "Rail PdM pipeline", "Preprint / 2025"],
+        ].map(([label, detail, note], index) => (
+          <div key={label} className={`hero-evidence-item py-5 sm:px-6 ${index > 0 ? "border-t border-rule sm:border-l sm:border-t-0" : ""}`}>
+            <p className="mono-label text-signal-bright">{label}</p>
+            <p className="mt-2 text-sm font-medium text-paper">{detail}</p>
+            <p className="mt-1 font-mono text-[0.66rem] uppercase tracking-[0.15em] text-paper-dim">{note}</p>
+          </div>
+        ))}
+      </motion.div>
     </section>
   )
 }

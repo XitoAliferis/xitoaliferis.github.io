@@ -20,10 +20,10 @@ export function FadeIn({
   const isInView = useInView(ref, { once: true, margin: "-80px" })
 
   const directionMap = {
-    up: { y: 40, x: 0 },
-    down: { y: -40, x: 0 },
-    left: { y: 0, x: 40 },
-    right: { y: 0, x: -40 },
+    up: { y: 18, x: 0 },
+    down: { y: -18, x: 0 },
+    left: { y: 0, x: 18 },
+    right: { y: 0, x: -18 },
     none: { y: 0, x: 0 },
   }
 
@@ -71,8 +71,8 @@ export function StaggerChildren({
 }
 
 export const staggerItem = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.4, 0.25, 1] as const } },
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.42, ease: [0.25, 0.4, 0.25, 1] as const } },
 }
 
 export function AnimatedCounter({

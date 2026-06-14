@@ -12,14 +12,14 @@ import { BackToTop } from "@/components/back-to-top"
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Navigation />
       <Hero />
       <About />
-      <Education />
       <Research />
       <Publications />
       <Experience />
+      <Education />
       <Awards />
       <Projects />
       <Footer />

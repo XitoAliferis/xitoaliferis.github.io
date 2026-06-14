@@ -1,126 +1,105 @@
 "use client"
 
-import { Award, Trophy, Star, Sparkles } from "lucide-react"
-import { FadeIn, StaggerChildren, staggerItem } from "@/components/motion"
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import { FadeIn } from "@/components/motion"
+import { SectionHeading } from "@/components/section-heading"
+
+const featured = {
+  title: "INFORMS RAS Problem Solving Competition - 1st Place Winner",
+  organization: "INFORMS Railway Applications Section",
+  year: "2025",
+  description: "First place in the 2025 INFORMS Railway Applications Section Problem Solving Competition for developing a predictive maintenance framework using machine learning on railway detector data.",
+}
+
+const researchFunding = [
+  {
+    title: "NSERC Undergraduate Student Research Award (USRA)",
+    year: "2026",
+    description: "Competitive national research award supporting undergraduate work in neuromorphic computing and 3D head reconstruction under Dr. Roy Eagleson.",
+  },
+  {
+    title: "NSERC Undergraduate Student Research Award (USRA)",
+    year: "2025",
+    description: "Competitive national research award supporting undergraduate work in machine learning and predictive maintenance under Dr. Yili Tang at the MoTech Group.",
+  },
+]
+
+const additional = [
+  {
+    title: "UWO In-Course Scholarships Year IV",
+    organization: "University of Western Ontario",
+    year: "2025",
+    description: "Awarded to top students across the university entering fourth year with competitive academic averages, recognizing high academic achievement in third year.",
+  },
+  {
+    title: "Dean's List",
+    organization: "University of Western Ontario",
+    year: "2023, 2024, 2025, 2026",
+    description: "Recognized for sustained academic excellence ranking among the top students in the Faculty of Engineering across all four years.",
+  },
+  {
+    title: "The President's Honor Roll",
+    organization: "University of Miami",
+    year: "2022",
+    description: "Awarded to undergraduate students who have attained the highest possible scholastic achievement for the semester.",
+  },
+]
 
 export function Awards() {
-  const awards = [
-    {
-      title: "INFORMS RAS Problem Solving Competition – 1st Place Winner",
-      organization: "INFORMS Railway Applications Section",
-      year: "2025",
-      description:
-        "First place in the 2025 INFORMS Railway Applications Section Problem Solving Competition for developing a predictive maintenance framework using machine learning on railway detector data.",
-      icon: Trophy,
-      featured: true,
-    },
-    {
-      title: "NSERC Undergraduate Student Research Award (USRA)",
-      organization: "NSERC & University of Western Ontario",
-      year: "2026",
-      description:
-        "Competitive national research award supporting undergraduate work in neuromorphic computing and 3D head reconstruction under Dr. Roy Eagleson.",
-      icon: Award,
-    },
-    {
-      title: "NSERC Undergraduate Student Research Award (USRA)",
-      organization: "NSERC & University of Western Ontario",
-      year: "2025",
-      description:
-        "Competitive national research award supporting undergraduate work in machine learning and predictive maintenance under Dr. Yili Tang at the MoTech Group.",
-      icon: Award,
-    },
-    {
-      title: "UWO In-Course Scholarships Year IV",
-      organization: "University of Western Ontario",
-      year: "2025",
-      description:
-        "Awarded to top students across the university entering fourth year with competitive academic averages, recognizing high academic achievement in third year.",
-      icon: Sparkles,
-    },
-    {
-      title: "Dean's List",
-      organization: "University of Western Ontario",
-      year: "2023, 2024, 2025, 2026",
-      description:
-        "Recognized for sustained academic excellence ranking among the top students in the Faculty of Engineering across all four years.",
-      icon: Star,
-    },
-    {
-      title: "The President's Honor Roll",
-      organization: "University of Miami",
-      year: "2022",
-      description:
-        "Awarded to undergraduate students who have attained the highest possible scholastic achievement for the semester.",
-      icon: Star,
-    },
-  ]
-
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
   return (
-    <section id="awards" className="py-32 px-6 relative section-alt">
-      <div className="section-divider absolute top-0 left-0 right-0" />
-
-      <div className="max-w-6xl mx-auto">
+    <section id="awards" className="chapter">
+      <div className="fieldbook-shell">
         <FadeIn>
-          <div className="mb-16">
-            <div className="inline-block px-4 py-1.5 mb-4 rounded-full border border-wine-700/30 bg-wine-800/10">
-              <span className="text-sm text-wine-500 font-mono">Recognition</span>
+          <SectionHeading index="06" label="Honors" title="Recognition and support" />
+        </FadeIn>
+        <FadeIn delay={0.08} className="grid gap-5 lg:grid-cols-[1.05fr_.95fr]">
+          <article className="relative overflow-hidden border border-signal/60 bg-signal/5 p-6 sm:p-8">
+            <p className="mono-label text-signal-bright">Featured result / 1st place</p>
+            <h3 className="mt-6 text-[clamp(1.45rem,2.5vw,2rem)] font-semibold leading-tight tracking-[-0.055em] text-paper">{featured.title}</h3>
+            <p className="mt-3 font-mono text-[0.67rem] uppercase tracking-[0.17em] text-signal-bright">{featured.organization} / {featured.year}</p>
+            <p className="mt-6 text-sm leading-7 text-paper-dim sm:text-base">{featured.description}</p>
+            <div className="absolute bottom-0 right-0 h-px w-36 bg-signal" />
+          </article>
+          <div className="border border-rule bg-graphite-soft p-6 sm:p-8">
+            <p className="mono-label text-signal-bright">Research funding / NSERC USRA</p>
+            <div className="mt-5 space-y-5">
+              {researchFunding.map((award) => (
+                <article key={award.year} className="border-t border-rule pt-5">
+                  <div className="flex justify-between gap-4">
+                    <h3 className="text-sm font-semibold text-paper">{award.title}</h3>
+                    <span className="font-mono text-[0.68rem] text-signal-bright">{award.year}</span>
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-paper-dim">{award.description}</p>
+                </article>
+              ))}
             </div>
-            <h2 className="text-5xl md:text-6xl font-bold mb-6">
-              Awards & <span className="text-gradient">Honors</span>
-            </h2>
           </div>
         </FadeIn>
-
-        <StaggerChildren staggerDelay={0.08} className="grid md:grid-cols-2 gap-5">
-          {awards.map((award, idx) => {
-            const Icon = award.icon
+        <FadeIn delay={0.13} className="mt-5 border-b border-rule">
+          <p className="mono-label border-t border-rule py-5 text-signal-bright">Additional academic recognition</p>
+          {additional.map((award, index) => {
+            const open = openIndex === index
             return (
-              <motion.div
-                key={idx}
-                variants={staggerItem}
-                className={`group relative p-6 rounded-2xl border transition-all duration-300 ${
-                  award.featured
-                    ? "md:col-span-2 bg-wine-800/8 border-wine-700/30 hover:border-wine-600/50 glow-wine"
-                    : "bg-muted/20 border-border hover:border-wine-700/30"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`p-3 rounded-xl shrink-0 group-hover:scale-110 transition-all ${
-                      award.featured
-                        ? "bg-wine-800/15 text-wine-500"
-                        : "bg-wine-800/10 text-wine-600/70 group-hover:text-wine-500"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div>
-                        <h3 className={`font-bold text-balance leading-tight ${award.featured ? "text-lg" : "text-base"}`}>
-                          {award.title}
-                        </h3>
-                        <p className="text-sm text-wine-500/70 font-medium">{award.organization}</p>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        {award.featured && (
-                          <span className="px-2.5 py-0.5 rounded-full bg-wine-800/10 text-wine-500 text-xs font-medium border border-wine-700/20">
-                            Featured
-                          </span>
-                        )}
-                        <span className="text-xs font-mono text-muted-foreground">{award.year}</span>
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground text-sm text-pretty leading-relaxed">{award.description}</p>
-                  </div>
-                </div>
-              </motion.div>
+              <article key={award.title} className="border-t border-rule">
+                <button type="button" onClick={() => setOpenIndex(open ? null : index)} aria-expanded={open} className="grid w-full gap-2 py-5 text-left sm:grid-cols-[minmax(14rem,1fr)_minmax(12rem,.65fr)_9rem_2rem] sm:items-center sm:gap-6">
+                  <span className="font-medium text-paper">{award.title}</span>
+                  <span className="text-sm text-paper-dim">{award.organization}</span>
+                  <span className="font-mono text-[0.67rem] uppercase tracking-[0.15em] text-signal-bright">{award.year}</span>
+                  <span className="font-mono text-signal-bright sm:text-right">{open ? "-" : "+"}</span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {open && (
+                    <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mb-5 max-w-3xl overflow-hidden border-l border-signal pl-4 text-sm leading-7 text-paper-dim">
+                      {award.description}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </article>
             )
           })}
-        </StaggerChildren>
+        </FadeIn>
       </div>
     </section>
   )
